@@ -5,6 +5,7 @@ import com.facebook.Response;
 import com.facebook.Session;
 import com.facebook.SessionState;
 import com.facebook.UiLifecycleHelper;
+import com.facebook.model.GraphObject;
 import com.facebook.model.GraphUser;
 
 import android.os.Bundle;
@@ -52,36 +53,40 @@ public class UserProfileFragment extends Fragment {
 		link = (TextView) view.findViewById(R.id.link);
 		gender = (TextView) view.findViewById(R.id.gender);
 		locale = (TextView) view.findViewById(R.id.locale);
-		
-		if (session.isOpened()) {
-			Log.e(TAG, "Session is open");
-			Request.newMeRequest(session, new Request.GraphUserCallback() {
-				
-				@Override
-				public void onCompleted(GraphUser user, Response response) {
-					if (response.getError() != null) {
-						Log.e(TAG, "Error " + response.getError().getErrorMessage());
-						return;
-					}
-					
-					if (user == null) {
-						Log.e(TAG, "GraphUser is null");
-						return;
-					}
-					
-					id.setText("ID: " + user.getId());
-					name.setText("Name: " + user.getName());
-					link.setText("Link: " + user.getLink());
-					gender.setText("Gender: " + user.asMap().get("gender").toString());
-					locale.setText("Locale: " + user.getLocation());
-				//	age_range.setText("Age range: " + user.asMap().get("age_range").toString());
+
+		Request.newMeRequest(session, new Request.GraphUserCallback() {
+
+			@Override
+			public void onCompleted(GraphUser user, Response response) {
+				if (response.getError() != null) {
+					Log.e(TAG, "Error " + response.getError().getErrorMessage());
+					return;
 				}
-			}).executeAsync();
+
+				if (user == null) {
+					Log.e(TAG, "GraphUser is null");
+					return;
+				}
+
+				id.setText("ID: " + user.getId());
+				name.setText("Name: " + user.getName());
+				link.setText("Link: " + user.getLink());
+				gender.setText("Gender: "
+						+ user.asMap().get("gender").toString());
+				locale.setText("Locale: " + user.getLocation());
+			}
+		}).executeAsync();
+		
+		
+		Request.newPostRequest(session, "/me", GraphObject.Factory.create(), new Request.Callback() {
 			
-			
-		} else if (session.isClosed()) {
-			Log.e(TAG, "Session is closed");
-		}
+			@Override
+			public void onCompleted(Response response) {
+				
+			}
+		}).executeAsync();
+		
+		
 	}
 	
 	
