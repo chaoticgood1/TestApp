@@ -20,3 +20,4 @@ public class SelectionFragment extends Fragment {
 		return view;
 	}
 }
+

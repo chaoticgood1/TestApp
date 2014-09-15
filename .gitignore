@@ -2,3 +2,5 @@ bin/
 gen/
 .settings
 .gitignore
+gen/
+gen/com/nickan/testapp/R.java

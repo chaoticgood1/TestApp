@@ -24,7 +24,6 @@ public class UserProfileFragment extends Fragment {
 	TextView link;
 	TextView gender;
 	TextView locale;
-	TextView age_range;
 	
 	View view;
 	
@@ -42,6 +41,9 @@ public class UserProfileFragment extends Fragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		super.onCreateView(inflater, container, savedInstanceState);
 		view = inflater.inflate(R.layout.user_profile, container, false);
+		
+		uiHelper = new UiLifecycleHelper(getActivity(), callback);
+		uiHelper.onCreate(savedInstanceState);
 		return view;
 	}
 	
@@ -74,11 +76,6 @@ public class UserProfileFragment extends Fragment {
 				gender.setText("Gender: " + user.asMap().get("gender").toString());
 				locale.setText("Locale: " + user.getLocation());		
 
-				if (user == null) {
-					Log.e(TAG, "GraphUser is null");
-					return;
-				}
-
 				id.setText("ID: " + user.getId());
 				name.setText("Name: " + user.getName());
 				link.setText("Link: " + user.getLink());
@@ -95,7 +92,6 @@ public class UserProfileFragment extends Fragment {
 				
 			}
 		}).executeAsync();
-
 
 	}
 	

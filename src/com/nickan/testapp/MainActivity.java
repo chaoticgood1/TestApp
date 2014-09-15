@@ -23,8 +23,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 public class MainActivity extends FragmentActivity {
-	private static final String TAG = "MainActivity";
-	
 	private static final int SPLASH = 0;
 	private static final int USER_PROFILE = 1;
 	private static final int SETTINGS = 2;
@@ -66,6 +64,7 @@ public class MainActivity extends FragmentActivity {
 		}
 		transaction.commit();
 		
+		
 		// Add code to print out the key hash
 		getHashKey();
 	}
@@ -73,12 +72,12 @@ public class MainActivity extends FragmentActivity {
 	private void getHashKey() {
 		try {
 	        PackageInfo info = getPackageManager().getPackageInfo(
-	                "com.nickan.testapp", 
+	                "com.facebook.samples.hellofacebook", 
 	                PackageManager.GET_SIGNATURES);
 	        for (Signature signature : info.signatures) {
 	            MessageDigest md = MessageDigest.getInstance("SHA");
 	            md.update(signature.toByteArray());
-	            Log.e("KeyHash:", Base64.encodeToString(md.digest(), Base64.DEFAULT));
+	            Log.d("KeyHash:", Base64.encodeToString(md.digest(), Base64.DEFAULT));
 	            }
 	    } catch (NameNotFoundException e) {
 
@@ -101,9 +100,6 @@ public class MainActivity extends FragmentActivity {
 			transaction.addToBackStack(null);
 		}
 		transaction.commit();
-		
-		///////////....
-		Log.e("Fragment index", "" + fragmentIndex);
 	}
 	
 	private void onSessionStateChange(Session session, SessionState state, Exception exception) {
@@ -120,53 +116,22 @@ public class MainActivity extends FragmentActivity {
 			if (state.isOpened()) {
 				// If the session state is open, show the authenticated fragment
 				showFragment(USER_PROFILE, false);
-				
-				///////////////....
-				Log.e("State is open: ", "user profile");
 			} else if (state.isClosed()){
-				
-				
-				///////////////....
-				Log.e("State is closed: ", "splash");
 				showFragment(SPLASH, false);
 			}
-			
 		}
-		
-		showSessionStatus("onSessionStateChange");
 	}
 	
 	
 	@Override
 	public void onResumeFragments() {
 		super.onResumeFragments();
-		Session session = Session.getActiveSession();	
+		Session session = Session.getActiveSession();
+		
 		if (session != null && session.isOpened()) {
 			showFragment(USER_PROFILE, false);
 		} else {
 			showFragment(SPLASH, false);
-		}
-		
-		///.....
-		showSessionStatus("onResumeFragments");
-	}
-	
-	// For debugging
-	public static void showSessionStatus(String identifier) {
-		Session session = Session.getActiveSession();
-		
-		if (session == null) {
-			Log.e(TAG + " " + identifier, "session is null");
-		} else {
-			Log.e(TAG + " " + identifier, "session is not null");
-		}
-		
-		if (session.isOpened()){
-			Log.e(TAG + " " + identifier, "session close");
-		} else if (session.isClosed()){
-			Log.e(TAG + " " + identifier, "session open");
-		} else {
-			Log.e(TAG + " " + identifier, "session neither open nor close");
 		}
 	}
 	
@@ -175,8 +140,6 @@ public class MainActivity extends FragmentActivity {
 		super.onResume();
 		uiHelper.onResume();
 		isResumed = true;
-		
-		
 	}
 	
 	@Override
@@ -190,7 +153,6 @@ public class MainActivity extends FragmentActivity {
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 		uiHelper.onActivityResult(requestCode, resultCode, data);
-		Session.getActiveSession().onActivityResult(this, requestCode, resultCode, data);
 	}
 	
 	@Override
@@ -232,3 +194,4 @@ public class MainActivity extends FragmentActivity {
 	
 	
 }	
+
